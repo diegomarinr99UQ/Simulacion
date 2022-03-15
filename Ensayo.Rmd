@@ -1,0 +1,234 @@
+---
+title: "TALLER SIMULACION 1"
+author: "SANTIAGO LOPEZ Y DIEGO MARIN"
+date: "3/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Punto 1
+
+```{r}
+library(nortest)
+hembras= c(183.2, 182.5, 166.8, 184.1, 190.0, 196.3, 183.0, 178.1, 173.3, 204.3, 193.2, 187.3, 176.5, 180.4, 185.8, 179.0, 184.3, 189.3, 188.3, 189.2, 195.5, 186.8, 189.1, 202.4, 202.2, 203.1, 210.8)
+machos= c(140.9, 173.9, 118.9, 121.7, 177.4, 140.0, 173.8, 154.8, 192.7, 154.5, 177.5, 134.4, 109.2, 153.4, 175.0, 150.7, 138.7, 169.8, 203.3, 136.7, 153.9, 163.0, 165.3, 176.7, 137.7, 126.7, 150.0)
+
+```
+
+
+## Datos
+ Hembras | Machos
+ --|--
+ 183.2 182.5, 166.8|140.9, 173.9, 118.9
+ 184.1, 190.0, 196.3|121.7, 177.4, 140.0
+ 183.0, 178.1, 173.3|173.8, 154.8, 192.7
+ 204.3, 193.2, 187.3|154.5, 177.5, 134.4
+ 176.5, 180.4, 185.8|109.2, 153.4, 175.0
+ 179.0, 184.3, 189.3|150.7, 138.7, 169.8
+ 188.3, 189.2, 195.5|203.3, 136.7, 153.9
+ 186.8, 189.1, 202.4|163.0, 165.3, 176.7
+ 202.2, 203.1, 210.8|137.7, 126.7, 150.0
+
+#### A. Haga un histograma con cinco clases y determine la distribucion de los datos para cada sexo. Explique acerca de la distribucion del tamanioo para cada genero.
+
+```{r puntoA, echo=FALSE}
+## creacion de los vectores con los tamanios de la langostas separados por sexo
+hembras= c(183.2, 182.5, 166.8, 184.1, 190.0, 196.3, 183.0, 178.1, 173.3, 204.3, 193.2, 187.3, 176.5, 180.4, 185.8, 179.0, 184.3, 189.3, 188.3, 189.2, 195.5, 186.8, 189.1, 202.4, 202.2, 203.1, 210.8)
+machos= c(140.9, 173.9, 118.9, 121.7, 177.4, 140.0, 173.8, 154.8, 192.7, 154.5, 177.5, 134.4, 109.2, 153.4, 175.0, 150.7, 138.7, 169.8, 203.3, 136.7, 153.9, 163.0, 165.3, 176.7, 137.7, 126.7, 150.0)
+
+##identificacion de los datos mayores y menores para dividir en rangos
+datoMenorHembra= min(hembras)
+datoMayorHembra= max(hembras)
+datoMenorMacho= min(machos)
+datoMayorMacho= max(machos)
+secuenciaHembra= (datoMayorHembra - datoMenorHembra)/ 5
+secuenciaMacho=(datoMayorMacho - datoMenorMacho)/ 5
+
+##identificacion de media y desviacion estandar
+mediaHembra= mean(hembras)
+dvHembras= sd(hembras)
+mediaMachos= mean(machos)
+dvMachos= sd(machos)
+
+##Creacion de los dos histogramas divididos en 5 rangos de cada sexo
+par(mfrow= c(1,2))
+hist(x= hembras, breaks = seq(from= datoMenorHembra, to=datoMayorHembra, by= secuenciaHembra),  col="pink", main = "Langostinos hembras", xlab = "Tamanio de langostinos(mm)", ylab = "Frecuencia")
+
+hist(x= machos, breaks = seq(from= datoMenorMacho, to=datoMayorMacho, by= secuenciaMacho),col = "blue",  main = "Langostinos machos", xlab = "Tamanio de langostinos(mm)", ylab = "Frecuencia")
+
+##Creacion de los dos graficos de la distribucion normal
+par(mfrow= c(1,2))
+
+plot(dnorm(0:300, mean= mediaHembra, sd= dvHembras), col="red", type = "l", ylab = "probabilidad", xlab = "tamanio de las langostas hembras (mm)", main = "Dis.Normal("~mu ~"=188.3259,"~sigma~ "=10.2447)")
+plot(dnorm(0:300, mean= mediaMachos, sd= dvMachos), col="red", type = "l", ylab = "probabilidad", xlab = "tamanio de las langostas machos (mm)", main = "Dis. Normal("~mu ~"=154.4667,"~sigma~ "=23.0646)")
+
+
+```
+
+
+El grafico de la distribucion normal del tamanio de las langostas hembras es platicurtica y totalmente simetrica, mientras que la distribucion nornal del tamanio de las langostas machos es mesocurtica y totalmente simetrica
+
+#### B.Hallar el promedio y la desviacion estandar para cada sexo. Que puede concluir?
+
+```{r}
+##media y desviacion estandar de las hembras
+mediaHembra= mean(hembras)
+dvHembras= sd(hembras)
+##media y desviacion estandar de los machos
+mediaMachos= mean(machos)
+dvMachos= sd(machos)
+```
+
+Obteniendo como resultado el promedio del tamanio de las langostas hembra es de 188.3260 mm con una desviacion estandar de mas o menos 10.2447 mm. En cuanto al tamanio de las langostas machos tienen un promedio de 154.4667 mm con una desviacion estandar de mas o menos 23.0646 mm
+
+#### C. Halle un intervalo para la media del Largo total por sexo con un nivel de confianza del 97%. Provea la interpretacion respectiva.
+
+```{r}
+## intervalo de confianza de 97% para las hembras
+t.test(x= hembras,mu= mediaHembra, conf.level = 0.97)
+
+```
+
+##### El rango de tamanios de una langosta hembra con un porcentaje de confianza del 97% es desde 183.7995 hasta 192.8523 milimetros 
+
+```{r}
+## intervalo de confianza de 97% para los machos
+t.test(x= machos,mu= mediaMachos, conf.level = 0.97)
+
+```
+
+##### El rango de tamanios de una langosta macho con un porcentaje confianza del 97% es desde 144.2760 hasta 164.6573 milimetros
+
+#### D. Construya un Boxplot por sexo e interpretelo.
+
+```{r puntoD, echo=FALSE}
+##Construccion de los graficos de cajas y bigotes en paralelo para poder ser comparados
+par(mfrow= c(1,2))
+boxplot(hembras,  col="pink", main = "Langostinos hembras", xlab = "Tamanio de langostinos(mm)", ylab = "Frecuencia", horizontal = FALSE)
+boxplot(machos,  col="blue", main = "Langostinos machos", xlab = "Tamanio de langostinos(mm)", ylab = "Frecuencia", horizontal = FALSE)
+
+```
+
+En la anterior grafica de Cajas y Bigotes del tamanio de las langostas en milimetros y separadas por sexo se puede evidenciar que en cuanto a las hembras que tiene un limite inferior entre los 160 y 170 milimetros, que el 50% de los datos estan mas concentrados entre los 182 y 195 milimetros con una media aproximada de 189 milimetros y con un limite superior mayor de 210 y menor de 215 milimetros. En cuanto a los machos se puede notar que el limite inferior esta por debajo de 110 milimetros pero mayor a los 105 milimetros, que el 50% de los datos no estan tan concentrados como los de las hembras pero se encuentran en un intervalo entre 140 y 175 milimetros y con una media entre los 150 y 155 miliemtros, ademas, tienen un limite superior de aproximadamente de 205 milimetros
+
+#### E. Hallar el coeficiente de variacion de ambos sexos e interpretar
+
+```{r}
+##coeficiente de variacion: sigma/media *100 para tener un porcentaje
+(dvHembras/mediaHembra)*100
+(dvMachos/mediaMachos)*100
+
+```
+
+Dado que el tamanio de las langostas hembras tienen un coeficiente de variación más bajo de 5.4398% con respecto al tamanio de las langostas machos, los cuales tienen un coeficiente de variacion de 14.9318%, quiere decir que los datos de los tamanios de las langostas hembras varian menos que los tamanios de las langostas machos
+
+#### F. Comprobar normalidad
+
+```{r}
+## test de normalidad
+sf.test(hembras)
+sf.test(machos)
+
+```
+
+##### Como el p valor para el tamanio de las langostas hembras (0.6565) es mayor a alfa (0,03), no se rechaza la hipótesis nula (H0), por lo tanto, el tamanio de las langostas hembras presenta un comportamiento normal
+
+##### Como el p valor para el tamanio de las langostas machos (0.8765) es mayor a alfa (0,03), no se rechaza la hipótesis nula (H0), por lo tanto, el tamanio de las langostas machos presenta un comportamiento normal
+
+## Punto 2
+En un restaurante de la ciudad se sabe que la probabilidad de que se reciba un billete de $50.000 falso es de 0.015. Si se sabe que en una semana se reciben pagos con 900 billetes de $50.000
+
+```{r punto2, echo=FALSE}
+##Grafico de la distribucion binomial
+plot(dbinom(0:900,900,0.015), col= "blue",type = "l", xlab = "Numero de billetes de $50.000 falsos", ylab = "Probabilidad ", main = "Distribucion binomial (n=900 y p=0.015)")
+
+```
+
+#### A. lo sumo 25 billetes sean falsos.
+
+```{r}
+## X= cantidad de billetes de $50.000 falsos
+##cantidad de billetes de $50.000 que se reciben en una semana 
+n= 900
+## probabilidad de que el billete sea falso
+p= 0.015
+
+##distribucion Binomial
+
+pbinom(25,n,p,lower.tail = TRUE)
+
+```
+
+La probabilidad de que en una semana a lo sumo reciban 25 billetes de $50.000 falsos es de 0.9985
+
+#### B. La cantidad de billetes falsos este entre 20 y 30.
+
+```{r}
+##distribucion Binomial
+
+pbinom(30,n,p,lower.tail = TRUE) - pbinom(20,n,p,lower.tail = TRUE)
+
+```
+
+La probabilidad de que en una semana reciban entre 20 y 30 billetes de $50.000 falsos es de 0.0340
+
+#### C. Mas de 10 sean falsos.
+
+```{r}
+##distribucion Binomial
+
+pbinom(10,n,p,lower.tail = FALSE)
+
+```
+
+La probabilidad de que en una semana reciban mas de 10 billetes de $50.000 falsos es de 0.7908
+
+## Punto 3
+
+Segun un estudio del Departamento Nacional de Estadistica -DANE-, la vida media para el quinquenio de 2010 a 2015 de los habitantes de Colombia es 76 anios, con una varianza de 25. Se pretende hacer un estudio con el objetivo de extrapolar los resultados anteriores a una pequenia ciudad de 100.000 habitantes, considerando que el tiempo de sobrevida es normal.
+
+```{r punto3, echo=FALSE}
+##Grafico de la distribucion normal
+plot(dnorm(0:150, mean= 75, sd= 25), col= "blue",type = "l", xlab = "vida promedio de los habitantes en una pequenia ciudad", ylab = "Probabilidad ", main = "Distribucion binomial ("~mu ~" =75,"~sigma~ "=25)")
+## linea en la media
+abline(v=75, col= "red")
+## lineas en las desviaciones estandar
+abline(v=50, col= "green")
+abline(v=100, col= "green")
+
+```
+
+#### A. Cuantos de los habitantes de la pequenia ciudad superaran previsiblemente los 92 anios?
+
+```{r}
+##media de la edad de los habitantes de una pequenia ciudad
+mu=75
+##varianza de la edad de los habitantes de una pequenia ciudad
+sigma= 25
+## poblacion total
+n=100000
+
+##distribucion normal 
+probabilidad= pnorm(92,mu,sigma, lower.tail = FALSE)
+
+probabilidad * n
+
+```
+
+de los 100.000 habitantes, 24.825 habitantes pueden superar los 92 anios
+
+#### B. Cuantos viviran menos de 55 anios o mas de 75 anios?
+
+```{r}
+##distribucion normal 
+probMayor= pnorm(75,mu,sigma, lower.tail = TRUE)
+probMenor= pnorm(55,mu,sigma, lower.tail = TRUE)
+
+(probMayor - probMenor)* n
+
+```
+
+de los 100.000 habitantes, 28.814 habitantes pueden vivir entre los 55 anios y los 75 anios
+
